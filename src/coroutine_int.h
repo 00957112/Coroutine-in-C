@@ -50,6 +50,23 @@ void rq_init(struct rq *rq);
 int rq_enqueue(struct rq *rq, struct task_struct *task);
 struct task_struct *rq_dequeue(struct rq *rq);
 
+/*random*/
+#define RANDOM_SIZE 16
+
+struct random {
+    unsigned int num;
+    unsigned int have[RINGBUFFER_SIZE];
+    struct task_struct *array[RINGBUFFER_SIZE];
+};
+
+void rd_init(struct random *rd);
+int rd_in(struct random *rd, struct task_struct *task);
+struct task_struct *rd_out(struct random *rd);
+
+
+
+
+
 /* main data structure */
 
 #define MAX_CR_TABLE_SIZE 10
@@ -63,7 +80,7 @@ struct cr {
     /* scheduler - chose by the flags */
     struct rq rq; /* FIFO */
     struct rb_root root; /* Default */
-
+    struct random rd; /* ramdom *//////////////////////////
     /* sched operations */
     int (*schedule)(struct cr *cr, job_t func, void *args);
     struct task_struct *(*pick_next_task)(struct cr *cr);
